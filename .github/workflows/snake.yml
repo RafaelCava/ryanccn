@@ -2,8 +2,7 @@ name: Generate Snake
 
 on:
   schedule:
-    # every 6 hours
-    - cron: "0 */6 * * *"
+    - cron: "30 8 * * *"
   workflow_dispatch:
 
 jobs:
@@ -11,18 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: Platane/snk@master
-        id: snake-gif
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      
+      - name: Generate snakes
+        uses: Platane/snk@master
         with:
           github_user_name: ryanccn
-          gif_out_path: images/snake.gif
+          # gif_out_path: images/snake.gif
           svg_out_path: images/snake.svg
 
-      - name: Push
-        run: |
-          git config --global user.email "70191398+ryanccn@users.noreply.github.com"
-          git config --global user.name "Ryan Cao"
-          git add snake.gif snake.svg
-          git commit -m "[automated] update snakes"
-          git push
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          author_name: "snk [bot]"
+          message: "chore[automated]: update snake"
