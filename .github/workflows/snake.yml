@@ -1,0 +1,28 @@
+name: Generate Snake
+
+on:
+  schedule:
+    # every 6 hours
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: Platane/snk@master
+        id: snake-gif
+        with:
+          github_user_name: ryanccn
+          gif_out_path: images/snake.gif
+          svg_out_path: images/snake.svg
+
+      - name: Push
+        run: |
+          git config --global user.email "70191398+ryanccn@users.noreply.github.com"
+          git config --global user.name "Ryan Cao"
+          git add snake.gif snake.svg
+          git commit -m "[automated] update snakes"
+          git push
